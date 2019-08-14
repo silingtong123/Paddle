@@ -17,7 +17,5 @@ import os
 import sys
 sys.path.insert(0, "../../..")
 from importScipy import funcImportScipy
-print(os.name)
-os.name = 'nt'
-print(os.name)
-funcImportScipy(os.name)
+testOsName = 'nt'
+funcImportScipy(testOsName)
