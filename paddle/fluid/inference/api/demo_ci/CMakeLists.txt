@@ -69,6 +69,12 @@ if(WITH_GPU)
   endif(NOT WIN32)
 endif()
 
+if (USE_TENSORRT AND WITH_GPU)
+  set(TENSORRT_ROOT ${PADDLE_LIB_THIRD_PARTY_PATH}tensorrt)
+  set(TENSORRT_INCLUDE_DIR ${TENSORRT_ROOT}/include)
+  set(TENSORRT_LIB_DIR ${TENSORRT_ROOT}/lib)
+endif()
+
 if (NOT WIN32)
   if (USE_TENSORRT AND WITH_GPU)
       include_directories("${TENSORRT_INCLUDE_DIR}")
