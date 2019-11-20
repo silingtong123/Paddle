@@ -44,7 +44,7 @@ IF "%use_mkl%"=="N" (
 )
 
 :set_path_cuda
-rem 请输入cuda libraries目录，例如D:\cuda\lib\x64，默认会从系统的环境变量中寻找，并选择找到的第一个
+rem 请输入cuda libraries目录，例如D:\cuda\lib\x64
 if /i "!gpu_inference!"=="Y" (
     SET /P cuda_lib_dir="Please input the path of cuda libraries, such as D:\cuda\lib\x64   =======>"
     IF NOT EXIST "!cuda_lib_dir!" (
@@ -120,8 +120,9 @@ if NOT EXIST "%source_path%\%model_name%.tar.gz" (
   if EXIST "%source_path%\%model_name%.tar.gz" (
   if NOT EXIST "%source_path%\%model_name%" (
     md %source_path%\%model_name%
-    rem 请输入python.exe的路径，例如C:\Python35\python.exe，默认会从系统的环境变量中寻找python.exe，并会选择找到的第一个
-    SET /P python_path="Please input the path of python.exe, such as C:\Python35\python.exe   =======>"
+    rem 请输入python.exe或者python3.exe的路径，例如C:\Python35\python.exe，默认会从系统的环境变量中寻找python.exe，
+    rem 如果使用的为python3.exe，则需要设置具体路径。
+    SET /P python_path="Please input the path of python.exe, such as C:\Python35\python.exe, C:\Python35\python3.exe   =======>"
     if "!python_path!"=="" (
       python  %source_path%\untar_model.py %source_path%\%model_name%.tar.gz %source_path%\%model_name%
     ) else (
