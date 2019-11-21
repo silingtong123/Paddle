@@ -4,6 +4,8 @@ endif()
 
 set(FLUID_CORE_MODULES proto_desc memory lod_tensor executor data_feed_proto)
 
+add_definitions(-DPADDLE_DLL_INFERENCE)
+
 # TODO(panyx0718): Should this be called paddle_fluid_inference_api_internal?
 cc_library(paddle_fluid_api
     SRCS io.cc
