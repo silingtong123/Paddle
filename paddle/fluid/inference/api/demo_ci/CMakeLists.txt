@@ -116,9 +116,17 @@ endif()
 
 # Note: libpaddle_inference_api.so/a must put before libpaddle_fluid.so/a
 if(WITH_STATIC_LIB)
-  set(DEPS ${PADDLE_LIB}/paddle/lib/libpaddle_fluid${CMAKE_STATIC_LIBRARY_SUFFIX})
+  if(WIN32)
+    set(DEPS ${PADDLE_LIB}/paddle/lib/paddle_fluid${CMAKE_STATIC_LIBRARY_SUFFIX})
+  else()
+    set(DEPS ${PADDLE_LIB}/paddle/lib/libpaddle_fluid${CMAKE_STATIC_LIBRARY_SUFFIX})
+  endif()
 else()
-  set(DEPS ${PADDLE_LIB}/paddle/lib/libpaddle_fluid${CMAKE_SHARED_LIBRARY_SUFFIX})
+  if(WIN32)
+    set(DEPS ${PADDLE_LIB}/paddle/lib/paddle_fluid${CMAKE_STATIC_LIBRARY_SUFFIX}) 
+  else()
+    set(DEPS ${PADDLE_LIB}/paddle/lib/libpaddle_fluid${CMAKE_SHARED_LIBRARY_SUFFIX})
+  endif()
 endif()
 
 if (NOT WIN32)
@@ -130,7 +138,7 @@ if (NOT WIN32)
 else()
   set(DEPS ${DEPS}
       ${MATH_LIB} ${MKLDNN_LIB}
-      glog gflags_static libprotobuf zlibstatic xxhash ${EXTERNAL_LIB})
+      glog gflags_static libprotobuf ${EXTERNAL_LIB})
   set(DEPS ${DEPS} libcmt shlwapi.lib)
 endif(NOT WIN32)
 
@@ -173,4 +181,8 @@ if(WIN32)
             COMMAND ${CMAKE_COMMAND} -E copy ${MATH_DLL} ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
             )
     endif()
+  #copy the dll to destination dirctory
+  add_custom_command(TARGET ${DEMO_NAME} POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy "${PADDLE_LIB}/paddle/lib/paddle_fluid.dll" ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
+    )
 endif()
