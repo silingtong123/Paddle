@@ -6,7 +6,6 @@ set build_path=%~dp0\build
 setlocal enabledelayedexpansion
 
 rem set gpu_inference
-rem 请确认是否使用GPU预测库(Y/N)，默认为N，使用GPU预测库需要下载对应版本的预测库
 SET /P gpu_inference="Use GPU_inference_lib or not(Y/N), default: N   =======>"
 IF /i "%gpu_inference%"=="y" (
   SET gpu_inference=Y
@@ -14,7 +13,6 @@ IF /i "%gpu_inference%"=="y" (
   SET gpu_inference=N
 )
 
-rem 请确认该预测库是否使用MKL（Y/N），默认为Y（默认使用MKL），需要下载对应版本的预测库
 SET /P use_mkl="Use MKL or not (Y/N), default: Y   =======>"
 if /i "%use_mkl%"=="N" (
   set use_mkl=N
@@ -23,7 +21,6 @@ if /i "%use_mkl%"=="N" (
 )
 
 :set_paddle_infernece_lib
-rem 请输入paddle预测库路径，例如D:\fluid_inference_install_dir
 SET /P paddle_infernece_lib="Please input the path of paddle inference library, such as D:\fluid_inference_install_dir   =======>"
 
 IF NOT EXIST "%paddle_infernece_lib%" (
@@ -44,7 +41,6 @@ IF "%use_mkl%"=="N" (
 )
 
 :set_path_cuda
-rem 请输入cuda libraries目录，例如D:\cuda\lib\x64
 if /i "!gpu_inference!"=="Y" (
     SET /P cuda_lib_dir="Please input the path of cuda libraries, such as D:\cuda\lib\x64   =======>"
     IF NOT EXIST "!cuda_lib_dir!" (
@@ -54,7 +50,6 @@ if /i "!gpu_inference!"=="Y" (
 )
 
 rem set_use_gpu
-rem 请确认是否使用GPU进行预测，默认为N，使用GPU需要GPU的预测库
 if /i "!gpu_inference!"=="Y" (
     SET /P use_gpu="Use GPU or not(Y/N), default: N   =======>"
 )
@@ -66,7 +61,6 @@ if /i "%use_gpu%"=="Y" (
 )
 
 rem set_path_vs_command_prompt 
-rem 设置vs本机工作命令提示符的路径，建议使用x64
 :set_vcvarsall_dir
 SET /P vcvarsall_dir="Please input the path of visual studio command Prompt, such as C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat   =======>"
     
@@ -76,7 +70,6 @@ IF NOT EXIST "%vcvarsall_dir%" (
 )
 
 rem set_demo_name
-rem 设置要编译的demo文件名前缀,默认为windows_mobilenet
 :set_demo_name
 SET /P demo_name="Please input the demo name, default: windows_mobilenet  =======>"
 if   "%demo_name%"==""  set demo_name=windows_mobilenet
@@ -95,19 +88,6 @@ if "%demo_name%"=="trt_mobilenet_demo" (
   )
   set model_name=mobilenet
 )
-echo "=================================================================="
-echo "use_gpu_inference=%gpu_inference%"
-echo "use_mkl=%use_mkl%"
-echo "use_gpu=%use_gpu%"
-
-echo "paddle_infernece_lib=%paddle_infernece_lib%"
-IF /i "%gpu_inference%"=="y" (
-  echo "cuda_lib_dir=%cuda_lib_dir%"
-)
-echo "vs_vcvarsall_dir=%vcvarsall_dir%"
-echo "demo_name=%demo_name%"
-echo "===================================================================="
-pause
 
 rem download model
 if NOT EXIST "%source_path%\%model_name%.tar.gz" (
@@ -117,20 +97,55 @@ if NOT EXIST "%source_path%\%model_name%.tar.gz" (
   if "%model_name%"=="word2vec.inference.model" (
      call:download_model_word2vec
   )
-  if EXIST "%source_path%\%model_name%.tar.gz" (
+)
+
+if EXIST "%source_path%\%model_name%.tar.gz" (
   if NOT EXIST "%source_path%\%model_name%" (
     md %source_path%\%model_name%
-    rem 请输入python.exe或者python3.exe的路径，例如C:\Python35\python.exe，默认会从系统的环境变量中寻找python.exe，
-    rem 如果使用的为python3.exe，则需要设置具体路径。
     SET /P python_path="Please input the path of python.exe, such as C:\Python35\python.exe, C:\Python35\python3.exe   =======>"
-    if "!python_path!"=="" (
-      python  %source_path%\untar_model.py %source_path%\%model_name%.tar.gz %source_path%\%model_name%
+    if "!python_path!"=="" set python_path=python.exe
+    !python_path! %source_path%\untar_model.py %source_path%\%model_name%.tar.gz %source_path%\%model_name%
+    
+    SET error_code=N
+    if "%model_name%"=="mobilenet" (
+      if NOT EXIST "%source_path%\%model_name%\model" set error_code="Y"
     ) else (
-      !python! %source_path%\untar_model.py %source_path%\%model_name%.tar.gz %source_path%\%model_name%
+      if NOT EXIST "%source_path%\%model_name%\%model_name%" set error_code="Y"
     )
+    if  "%error_code%"=="Y"  (
+       echo "========= Unzip %model_name%.tar.gz failed ======="
+       del /f /s /q "%source_path%\%model_name%\*.*" >nul 2>&1
+       rd /s /q  "%source_path%\%model_name%" >nul 2>&1
+       goto:eof
+    )  
   )
 )
+
+echo "=================================================================="
+echo.
+echo "use_gpu_inference=%gpu_inference%"
+echo.
+echo "use_mkl=%use_mkl%"
+echo.
+echo "use_gpu=%use_gpu%"
+echo.
+echo "paddle_infernece_lib=%paddle_infernece_lib%"
+echo.
+IF /i "%gpu_inference%"=="y" (
+  echo "cuda_lib_dir=%cuda_lib_dir%"
+  echo.
 )
+echo "vs_vcvarsall_dir=%vcvarsall_dir%"
+echo.
+echo "demo_name=%demo_name%"
+echo.
+if NOT "!python_path!"=="" (
+  echo "python_path=!python_path!"
+  echo.
+)
+echo "===================================================================="
+pause
+
 
 rem compile and run demo
 

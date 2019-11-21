@@ -18,9 +18,9 @@ import sys
 
 def untar(fname, dirs):
     """
-    解压tar.gz文件
-    :param fname: 压缩文件名
-    :param dirs: 解压后的存放路径
+    extract the tar.gz file
+    :param fname: the name of tar.gz file
+    :param dirs: the path of decompressed file 
     :return: bool
     """
     try:

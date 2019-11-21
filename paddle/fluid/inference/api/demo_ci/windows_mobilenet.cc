@@ -34,7 +34,7 @@ void RunAnalysis() {
   AnalysisConfig config;
   if (FLAGS_modeldir.empty()) {
     LOG(INFO)
-        << "Usage: path\\simple_on_word2vec --modeldir=path/to/your/model";
+        << "Usage: path\\mobilenet --modeldir=path/to/your/model";
     exit(1);
   }
 
