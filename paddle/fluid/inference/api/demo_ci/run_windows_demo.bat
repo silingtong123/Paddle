@@ -22,9 +22,11 @@ if /i "%use_mkl%"=="N" (
 
 :set_paddle_infernece_lib
 SET /P paddle_infernece_lib="Please input the path of paddle inference library, such as D:\fluid_inference_install_dir   =======>"
-
+set tmp_var=!paddle_infernece_lib!
+call:remove_space
+set paddle_infernece_lib=!tmp_var!
 IF NOT EXIST "%paddle_infernece_lib%" (
-echo "------------%paddle_infernece_lib% does not exist!!------------"
+echo "------------%paddle_infernece_lib% not exist------------"
 goto set_paddle_infernece_lib
 )
 
@@ -43,8 +45,11 @@ IF "%use_mkl%"=="N" (
 :set_path_cuda
 if /i "!gpu_inference!"=="Y" (
     SET /P cuda_lib_dir="Please input the path of cuda libraries, such as D:\cuda\lib\x64   =======>"
+    set tmp_var=!cuda_lib_dir!
+    call:remove_space
+    set cuda_lib_dir=!tmp_var!
     IF NOT EXIST "!cuda_lib_dir!" (
-        echo "------------%cuda_lib_dir% does not exist!!------------"
+        echo "------------!cuda_lib_dir!not exist------------"
         goto set_path_cuda
     )
 )
@@ -63,9 +68,11 @@ if /i "%use_gpu%"=="Y" (
 rem set_path_vs_command_prompt 
 :set_vcvarsall_dir
 SET /P vcvarsall_dir="Please input the path of visual studio command Prompt, such as C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat   =======>"
-    
+set tmp_var=!vcvarsall_dir!
+call:remove_space
+set vcvarsall_dir=!tmp_var!   
 IF NOT EXIST "%vcvarsall_dir%" (
-    echo "------------%vcvarsall_dir% does not exist!!------------"
+    echo "------------%vcvarsall_dir% not exist------------"
     goto set_vcvarsall_dir
 )
 
@@ -74,7 +81,7 @@ rem set_demo_name
 SET /P demo_name="Please input the demo name, default: windows_mobilenet  =======>"
 if   "%demo_name%"==""  set demo_name=windows_mobilenet
 IF NOT EXIST "%source_path%\%demo_name%.cc" (
-    echo "------------%source_path%\%demo_name%.cc does not exist!!------------"
+    echo "------------%source_path%\%demo_name%.cc not exist------------"
     goto set_demo_name
 )
 if "%demo_name%"=="windows_mobilenet" set model_name=mobilenet
@@ -101,9 +108,19 @@ if NOT EXIST "%source_path%\%model_name%.tar.gz" (
 
 if EXIST "%source_path%\%model_name%.tar.gz" (
   if NOT EXIST "%source_path%\%model_name%" (
-    md %source_path%\%model_name%
     SET /P python_path="Please input the path of python.exe, such as C:\Python35\python.exe, C:\Python35\python3.exe   =======>"
-    if "!python_path!"=="" set python_path=python.exe
+    set tmp_var=!python_path!
+    call:remove_space
+    set python_path=!tmp_var!   
+    if "!python_path!"=="" (
+      set python_path=python.exe
+    ) else (
+      if NOT exist "!python_path!" (
+        echo "------------!python_path! not exist------------" 
+        goto:eof
+      )  
+    )
+    md %source_path%\%model_name%
     !python_path! %source_path%\untar_model.py %source_path%\%model_name%.tar.gz %source_path%\%model_name%
     
     SET error_code=N
@@ -153,8 +170,10 @@ if NOT EXIST "%build_path%" (
     md %build_path%
     cd %build_path%
 ) else (
-   cd %build_path%
-   rm -rf *
+    del /f /s /q "%build_path%\*.*" >nul 2>&1
+    rd /s /q  "%build_path%" >nul 2>&1
+    md %build_path%
+    cd %build_path%
 )
 
 if /i "%use_mkl%"=="N" (
@@ -219,4 +238,18 @@ goto:eof
 :download_model_word2vec
 powershell.exe (new-object System.Net.WebClient).DownloadFile('http://paddle-inference-dist.bj.bcebos.com/word2vec.inference.model.tar.gz', ^
 '%source_path%\word2vec.inference.model.tar.gz')
+goto:eof
+
+:remove_space
+:remove_left_space
+if "%tmp_var:~0,1%"==" " (
+    set "tmp_var=%tmp_var:~1%"
+    goto remove_left_space
+)
+
+:remove_right_space
+if "%tmp_var:~-1%"==" " (
+    set "tmp_var=%tmp_var:~0,-1%"
+    goto remove_left_space
+)
 goto:eof
