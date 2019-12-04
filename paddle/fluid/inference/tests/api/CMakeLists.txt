@@ -323,7 +323,11 @@ inference_analysis_test(test_analyzer_capi_pd_tensor SRCS analyzer_capi_pd_tenso
 
 inference_analysis_test(test_analyzer_zerocopytensor_tensor SRCS analyzer_zerocopyTensor_tester.cc
             EXTRA_DEPS ${INFERENCE_EXTRA_DEPS} 
-            ARGS --infer_model=${OCR_INSTALL_DIR}/model)            
+            ARGS --infer_model=${OCR_INSTALL_DIR}/model)        
+
+inference_analysis_test(test_analyzer_paddletensor_tensor SRCS analyzer_paddleTensor_tester.cc
+            EXTRA_DEPS ${INFERENCE_EXTRA_DEPS} 
+            ARGS --infer_model=${OCR_INSTALL_DIR}/model --infer_data=${OCR_INSTALL_DIR}/data.txt --refer_result=${OCR_INSTALL_DIR}/result.txt)    
             
 if(WITH_MKLDNN)
   inference_analysis_test(test_analyzer_capi_int SRCS analyzer_capi_int_tester.cc
