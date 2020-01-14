@@ -146,7 +146,7 @@ if (NOT WIN32)
 else()
   set(DEPS ${DEPS}
       ${MATH_LIB} ${MKLDNN_LIB}
-      glog gflags_static libprotobuf zlibstatic xxhash ${EXTERNAL_LIB})
+      glog gflags libprotobuf  xxhash ${EXTERNAL_LIB})
   set(DEPS ${DEPS} libcmt shlwapi.lib)
 endif(NOT WIN32)
 
@@ -194,4 +194,8 @@ if(WIN32)
   add_custom_command(TARGET ${DEMO_NAME} POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy "${PADDLE_LIB}/paddle/lib/paddle_fluid.dll" ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
     )
+  
+  add_custom_command(TARGET ${DEMO_NAME} POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy "${PADDLE_LIB_THIRD_PARTY_PATH}gflags/lib/gflags.dll" ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
+  )
 endif()

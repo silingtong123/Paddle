@@ -96,9 +96,15 @@ function(copy_part_of_thrid_party TARGET DST)
     endif()
 
     set(dst_dir "${DST}/third_party/install/gflags")
-    copy(${TARGET}
-            SRCS ${GFLAGS_INCLUDE_DIR} ${GFLAGS_LIBRARIES}
-            DSTS ${dst_dir} ${dst_dir}/lib)
+    if(WIN32)
+        copy(${TARGET}
+                SRCS ${GFLAGS_INCLUDE_DIR} ${GFLAGS_LIBRARIES} ${GFLAGS_SHARED_LIB_DLL}
+                DSTS ${dst_dir} ${dst_dir}/lib ${dst_dir}/lib)
+    else()
+        copy(${TARGET}
+                SRCS ${GFLAGS_INCLUDE_DIR} ${GFLAGS_LIBRARIES}}
+                DSTS ${dst_dir} ${dst_dir}/lib)
+    endif()
 
     set(dst_dir "${DST}/third_party/install/glog")
     copy(${TARGET}
