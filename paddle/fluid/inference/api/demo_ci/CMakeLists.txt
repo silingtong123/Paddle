@@ -190,5 +190,5 @@ if(WIN32)
   endif()
   
   add_custom_command(TARGET ${DEMO_NAME} POST_BUILD 
-    COMMAND ${CMAKE_COMMAND} -E copy "${PADDLE_LIB_THIRD_PARTY_PATH}gflags/lib/paddle_fluid.dll" ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
+    COMMAND ${CMAKE_COMMAND} -E copy "${PADDLE_LIB_THIRD_PARTY_PATH}gflags/lib/gflags.dll" ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
 endif()
