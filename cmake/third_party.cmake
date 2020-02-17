@@ -175,7 +175,10 @@ endif()
 if(${CMAKE_VERSION} VERSION_GREATER "3.5.2")
     set(SHALLOW_CLONE "GIT_SHALLOW TRUE") # adds --depth=1 arg to git clone of External_Projects
 endif()
-add_definitions("/DGFLAGS_DLL_DECLARE_FLAG=__declspec(dllexport)")
+if(WIN32)
+    add_definitions("/DGFLAGS_DLL_DECLARE_FLAG=__declspec(dllexport)")
+endif()
+
 ########################### include third_party accoring to flags ###############################
 include(external/zlib)      # download, build, install zlib
 include(external/gflags)    # download, build, install gflags

@@ -198,4 +198,8 @@ if(WIN32)
   add_custom_command(TARGET ${DEMO_NAME} POST_BUILD 
     COMMAND ${CMAKE_COMMAND} -E copy "${PADDLE_LIB_THIRD_PARTY_PATH}gflags/lib/gflags.dll" ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
   )
+
+  add_custom_command(TARGET ${DEMO_NAME} POST_BUILD 
+    COMMAND ${CMAKE_COMMAND} -E copy "${PADDLE_LIB_THIRD_PARTY_PATH}glog/lib/glog.dll" ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}
+  )
 endif()

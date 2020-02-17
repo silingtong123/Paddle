@@ -108,8 +108,8 @@ function(copy_part_of_thrid_party TARGET DST)
 
     set(dst_dir "${DST}/third_party/install/glog")
     copy(${TARGET}
-            SRCS ${GLOG_INCLUDE_DIR} ${GLOG_LIBRARIES}
-            DSTS ${dst_dir} ${dst_dir}/lib)
+            SRCS ${GLOG_INCLUDE_DIR} ${GLOG_LIBRARIES}  ${GLOG_SHARED_LIB_DLL}
+            DSTS ${dst_dir} ${dst_dir}/lib ${dst_dir}/lib)
             
     if (NOT PROTOBUF_FOUND OR WIN32)
         set(dst_dir "${DST}/third_party/install/protobuf")
