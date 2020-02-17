@@ -174,7 +174,7 @@ class PADDLE_INFENRENCE_EXPORT GpuPassStrategy : public PassStrategy {
 PADDLE_INFENRENCE_EXPORT extern const std::vector<std::string>
     kTRTSubgraphPasses;
 PADDLE_INFENRENCE_EXPORT extern const std::vector<std::string>
-    kAnakinSubgraphPasses;
+    kLiteSubgraphPasses;
 
 
 }  // namespace paddle
