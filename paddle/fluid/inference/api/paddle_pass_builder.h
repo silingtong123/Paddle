@@ -176,4 +176,5 @@ PADDLE_INFENRENCE_EXPORT extern const std::vector<std::string>
 PADDLE_INFENRENCE_EXPORT extern const std::vector<std::string>
     kAnakinSubgraphPasses;
 
+
 }  // namespace paddle
