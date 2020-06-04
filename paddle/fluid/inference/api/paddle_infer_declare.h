@@ -15,18 +15,17 @@
 #pragma once
 
 #if defined(_WIN32)
-
-#ifndef PD_INFER_DECL
-#ifdef PADDLE_DLL_INFERENCE
-#ifndef PADDLE_ON_INFERENCE
-#define PD_INFER_DECL
+    #ifndef PD_INFER_DECL
+        #ifdef PADDLE_DLL_INFERENCE
+            #ifndef PADDLE_ON_INFERENCE
+                #define PD_INFER_DECL
+            #else
+                #define PD_INFER_DECL __declspec(dllexport)
+            #endif  // PADDLE_ON_INFERENCE
+        #else
+            #define PD_INFER_DECL __declspec(dllimport)
+        #endif  // PADDLE_DLL_INFERENCE
+    #endif  // PD_INFER_DECL
 #else
-#define PD_INFER_DECL __declspec(dllexport)
-#endif  // PADDLE_ON_INFERENCE
-#else
-#define PD_INFER_DECL __declspec(dllimport)
-#endif  // PADDLE_DLL_INFERENCE
-#endif  // PD_INFER_DECL
-#else
-#define PD_INFER_DECL __attribute__((visibility("default")))
+    #define PD_INFER_DECL __attribute__((visibility("default")))
 #endif  // _WIN32

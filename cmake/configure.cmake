@@ -52,6 +52,8 @@ if(WIN32)
   if (NOT MSVC)
     message(FATAL "Windows build only support msvc. Which was binded by the nvcc compiler of NVIDIA.")
   endif(NOT MSVC)
+
+  add_definitions(-DPADDLE_DLL_INFERENCE)
 endif(WIN32)
 
 if(WITH_PSLIB)
